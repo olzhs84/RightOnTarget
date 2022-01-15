@@ -13,62 +13,64 @@ class ViewController: UIViewController {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var chosenValue: UILabel!
     
+    
+    
     // загаданное число
     var number: Int = 0
     // раудн
-    var round: Int = 1
+//    var round: Int = 1
     // сумма очков за раунд
     var points: Int = 0
-    
+    // classes
+    var game: Game!
+    var roundGame: GameRound!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("viewDidLoad")
-//        self.number = Int.random(in: 1...50)
-//        self.label.text = String(self.number)
-        getNumber()
-        
-    }
-
-    @IBAction func checkNumber() {
-        
-        self.chosenValue.text = String(self.slider.value.rounded())
-        
-            
-            let numSlider = Int(self.slider.value.rounded())
-            
-            if numSlider > self.number {
-                self.points += 50 - numSlider + self.number
-            } else if numSlider < self.number {
-                self.points += 50 - self.number + numSlider
-            } else {
-                self.points += 50
-            }
-            
-            if self.round == 5 {
-                let alert = UIAlertController(title: "Игра окончена", message: "Вы заработали \(self.points) очков", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Начать заново", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-                self.round = 1
-                self.points = 0
-                chosenValue.text = nil
-            } else {
-                self.round += 1
-            }
-            
-            getNumber()
-//            self.label.text = String(self.number)
-            
-        
-        
-        
-        
+        game = Game(startValue: 1, endValue: 50)
+        roundGame = GameRound()
+        self.label.text = String(roundGame.currentSecretValue)
     }
     
-    func getNumber() {
-        self.number = Int.random(in: 1...50)
-        self.label.text = String(self.number)
+    @IBAction func backButton(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
     }
+    
+    
+    // MARK: Model
+    
+    @IBAction func checkNumber() {
+            
+        let numSlider = Int(self.slider.value.rounded())
+
+        roundGame.calculateScore(with: numSlider)
+    
+        if game.isGameEnded {
+            showAlertWith(score: roundGame.score)
+            game.restartGame()
+            roundGame = GameRound()
+        } else {
+            game.startNewRound()
+        }
+
+        updateLabelWithSecretNumber(newText: String(roundGame.currentSecretValue), choosenText: String(numSlider))
+    }
+    
+    // MARK: refresh View
+    
+    func updateLabelWithSecretNumber(newText: String, choosenText: String) {
+        label.text = newText
+        chosenValue.text = choosenText
+    }
+    
+    func showAlertWith(score: Int) {
+        let alert = UIAlertController(title: "Игра окончена", message: "Вы заработали \(score) очков", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Начать заново", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        chosenValue.text = nil
+    }
+
     
 }
 
