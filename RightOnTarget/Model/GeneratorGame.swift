@@ -10,8 +10,8 @@ import UIKit
 
 class Generator: GeneratorProtocol {
     
-    static func getRandomValue() -> Int {
-        (1...50).randomElement()!
+    static func getRandomValue(min: Int, max: Int) -> Int {
+        (min...max).randomElement()!
     }
 
     static func getRandomColor() -> UIColor {
@@ -21,7 +21,7 @@ class Generator: GeneratorProtocol {
 }
 
 protocol GeneratorProtocol {
-    static func getRandomValue() -> Int
+    static func getRandomValue(min: Int, max: Int) -> Int
     static func getRandomColor() -> UIColor
 }
 

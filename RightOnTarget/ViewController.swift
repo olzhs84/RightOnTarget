@@ -29,7 +29,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         print("viewDidLoad")
         game = Game(startValue: 1, endValue: 50)
-        roundGame = GameRound()
+        roundGame = GameRound(gameNumbers: true)
         self.label.text = String(roundGame.currentSecretValue)
     }
     
@@ -49,7 +49,7 @@ class ViewController: UIViewController {
         if game.isGameEnded {
             showAlertWith(score: roundGame.score)
             game.restartGame()
-            roundGame = GameRound()
+            roundGame = GameRound(gameNumbers: true)
         } else {
             game.startNewRound()
         }

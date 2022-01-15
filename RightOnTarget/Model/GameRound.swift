@@ -9,22 +9,33 @@ import Foundation
 
 class GameRound: GameRoundProtocol {
     
+    var gameNumbers: Bool
     var score: Int = 0
     var currentSecretValue: Int {
-        return Generator.getRandomValue()
+        if gameNumbers {
+            return Generator.getRandomValue(min: 1, max: 50)
+        } else {
+            return Generator.getRandomValue(min: 0, max: 3)
+        }
     }
     
+    init(gameNumbers: Bool) {
+        self.gameNumbers = gameNumbers
+    }
     
     func calculateScore(with value: Int) {
-        if value > currentSecretValue {
-            score += 50 - value + currentSecretValue
-        } else if value < currentSecretValue {
-            score += 50 - currentSecretValue + value
+        if gameNumbers {
+            if value > currentSecretValue {
+                score += 50 - value + currentSecretValue
+            } else if value < currentSecretValue {
+                score += 50 - currentSecretValue + value
+            } else {
+                score += 50
+            }
         } else {
-            score += 50
-        }        
+            score += value
+        }
     }
-    
 }
 
 protocol GameRoundProtocol {
